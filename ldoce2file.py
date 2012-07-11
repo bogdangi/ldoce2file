@@ -1,4 +1,4 @@
-#! /usb/bin/python
+#!/usr/bin/python
 # http://www.ldoceonline.com/search/?q=bore
 
 import urllib
