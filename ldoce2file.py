@@ -25,7 +25,7 @@ class Ldoce(object):
         entry = self.choiseDescription(soup)
         if self.is_short:
             entry = self.choiseSense(BeautifulSoup(str(entry)))
-            print entry[0].text.encode('utf-8')
+        print entry[0].text.encode('utf-8')
 
     def choiseDescription(self, soup):
         choice = 1
@@ -69,7 +69,6 @@ if __name__ == '__main__':
                               help="Make short description")
     (options, args) = parser.parse_args()
     if hasattr(options, 'word'):
-       print (options.word, options.is_short)
        ldoce = Ldoce(options.word, is_short=options.is_short)
        ldoce.showDescription()
 
