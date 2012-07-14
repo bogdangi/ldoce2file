@@ -1,0 +1,3 @@
+" <h1>{{ head.word }}{% if head.homographsSelected %} <sup>{{ head.homographsSelected }}</sup> {% endif %}</h1> {% if head.POS %} <h2>{{ head.POS }}</h2>{% endif %} ","
+{{ body.DEF }} {% for eg in  body.EXAMPLE %}
+<i>{{ eg }}</i>{% endfor %}","tag"
