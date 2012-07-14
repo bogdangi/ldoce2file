@@ -18,6 +18,15 @@ class Ldoce(object):
             self.word = word 
             self.params['q'] = self.word
 
+    def showDescription(self):
+        req = urllib2.Request(self.urlsearch, urllib.urlencode(self.params))
+        htmlSource = urllib2.urlopen(req).read()
+        soup = BeautifulSoup(htmlSource)
+        entry = self.choiseDescription(soup)
+        if self.is_short:
+            entry = self.choiseSense(BeautifulSoup(str(entry)))
+            print entry[0].text.encode('utf-8')
+
     def choiseDescription(self, soup):
         choice = 1
         entry = soup.findAll('div', {'class':'Entry'})
