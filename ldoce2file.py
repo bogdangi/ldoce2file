@@ -9,18 +9,16 @@ from BeautifulSoup import BeautifulSoup
 
 class Ldoce(object):
 
-    def __init__(self, word=None):
+    def __init__(self, word=None, is_short=False):
         self.urlsearch = "http://www.ldoceonline.com/search/"
         self.urllink = "http://www.ldoceonline.com"
         self.params = {}
+        self.is_short = is_short
         if word is not None:
-            self.word = word
+            self.word = word 
             self.params['q'] = self.word
 
-    def showDescription(self):
-        req = urllib2.Request(self.urlsearch, urllib.urlencode(self.params))
-        htmlSource = urllib2.urlopen(req).read()
-        soup = BeautifulSoup(htmlSource)
+    def choiseDescription(self, soup):
         choice = 1
         entry = soup.findAll('div', {'class':'Entry'})
         while entry == [] and choice != 0:
@@ -36,14 +34,33 @@ class Ldoce(object):
                 soup = BeautifulSoup(htmlSource)
                 entry = soup.findAll('div', {'class':'Entry'})
 
-        print entry[0].text
+        return entry
+
+    def choiseSense(self, soup):
+        choice = 1
+        entry = soup
+        words = soup.findAll('div',{'class':'Sense'})
+        while len(words) > 1 and choice != 0:
+            rangeWords = range(1,len(words)+1)
+            for i in rangeWords:
+                print i, words[i-1].text
+            choice = int(raw_input("Select sense: "))
+            if choice not in rangeWords: choice=0
+            else:
+                entry = soup.findAll('div', {'class':'Sense'})[choice-1].extract()
+
+        return entry
 
 
 if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option("-w", "--word", dest="word",
-                              help="Word to find", metavar="FILE")
+                              help="Word to find")
+    parser.add_option("-s", "--short", dest="is_short", action="store_true", default=False,
+                              help="Make short description")
     (options, args) = parser.parse_args()
     if hasattr(options, 'word'):
-       ldoce = Ldoce(options.word)
+       print (options.word, options.is_short)
+       ldoce = Ldoce(options.word, is_short=options.is_short)
        ldoce.showDescription()
+
