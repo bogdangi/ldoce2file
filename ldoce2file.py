@@ -16,10 +16,12 @@ settings.TEMPLATE_DIRS = (".",)
 
 class Ldoce(object):
 
-    def __init__(self, word=None, is_short=False, tag=''):
+    def __init__(self, word=None, is_short=False, tag='', sense=None, defenition=None):
         self.urlsearch = "http://www.ldoceonline.com/search/"
         self.urllink = "http://www.ldoceonline.com"
         self.data = {}
+        self.sense = sense
+        self.defenition = defenition
         self.params = {}
         self.soup = None
         self.rendered = None
@@ -57,14 +59,15 @@ class Ldoce(object):
         req = urllib2.Request(self.urlsearch, urllib.urlencode(self.params))
         htmlSource = urllib2.urlopen(req).read()
         soup = BeautifulSoup(htmlSource)
-        choice = 1
+        choice = self.description
         entry = soup.findAll('div', {'class':'Entry'})
         while entry == [] and choice != 0:
             words = soup.findAll('td',{'class':'hwdunSelMM'})
             rangeWords = range(1,len(words)+1)
-            for i in rangeWords:
-                print i, words[i-1].text
-            choice = int(raw_input("Select description: "))
+            if choice is None:
+                for i in rangeWords:
+                    print i, words[i-1].text
+                choice = int(raw_input("Select description: "))
             if choice not in rangeWords: choice=0
             else:
                 req = urllib2.Request(self.urllink + words[choice-1].find('a').get('href'))
@@ -78,13 +81,14 @@ class Ldoce(object):
         return entry
 
     def choiseSense(self, soup):
-        choice = 1
+        choice = self.sense
         words = soup.findAll('div',{'class':'Sense'})
         while len(words) > 1 and choice != 0:
             rangeWords = range(1,len(words)+1)
-            for i in rangeWords:
-                print i, words[i-1].text
-            choice = int(raw_input("Select sense: "))
+            if choice is None:
+                for i in rangeWords:
+                    print i, words[i-1].text
+                choice = int(raw_input("Select sense: "))
             if choice in rangeWords: 
                 soup.findAll('div', {'class':'Sense'})[choice-1]['id'] = 'markedSense' 
                 [i.extract() for i in words if i['id'] != 'markedSense']
@@ -101,6 +105,10 @@ if __name__ == '__main__':
                               help="Words from file")
     parser.add_option("-s", "--short", dest="is_short", action="store_true", default=False,
                               help="Make short description")
+    parser.add_option("-R", "--sense", dest="sense", 
+                              help="Select sense")
+    parser.add_option("-D", "--defenition", dest="defenition", 
+                              help="Select defenition")
     parser.add_option("-t", "--tag", dest="tag", default='',
                               help="Set tag")
     (options, args) = parser.parse_args()
