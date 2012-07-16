@@ -1,3 +1,3 @@
-" <h1>{{ head.word }}{% if head.homographsSelected %} <sup>{{ head.homographsSelected }}</sup> {% endif %}{% if head.POS %} <i>{{ head.POS }}</i>{% endif %}</h1>","
-{{ body.DEF }} {% for eg in  body.EXAMPLE %}
-<i>{{ eg }}</i>{% endfor %}","tag"
+" <h1>{{ head.word }}{% if head.homographsSelected %} <sup>{{ head.homographsSelected }}</sup> {% endif %}{% if head.POS %} <i>{{ head.POS }}</i>{% endif %}</h1>","{% for sense in senses %}
+{{ sense.DEF }} {% for eg in  sense.EXAMPLE %}{% if eg %}
+<i>{{ eg }}</i>{% endif %}{% endfor %}{% endfor %}","tag"
