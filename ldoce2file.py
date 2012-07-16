@@ -58,7 +58,8 @@ class Ldoce(object):
 
     def showDescription(self):
         self.choiseDescription()
-        print self.senses()
+        if self.is_short:
+            self.choiseSense()
         self.data = {
                 'head': self.head(),
                 'tag':  self.tag,
@@ -78,43 +79,38 @@ class Ldoce(object):
                 for i in rangeWords:
                     print i, words[i-1].text
                 choice = int(raw_input("Select description: "))
-            if choice not in rangeWords: choice=0
+            choice = int(choice)
+            if choice not in rangeWords: 
+                choice=0
             else:
                 req = urllib2.Request(self.urllink + words[choice-1].find('a').get('href'))
                 htmlSource = urllib2.urlopen(req).read()
                 soup = BeautifulSoup(htmlSource)
                 entry = soup.findAll('div', {'class':'Entry'})
 
-        if self.is_short:
-            self.choiseSense(BeautifulSoup(str(entry)))
-        
         self.entry = BeautifulSoup(str(entry))
 
-    def choiseSense(self, soup):
+    def choiseSense(self):
         choice = self.sense
-        words = soup.findAll('div',{'class':'Sense'})
+        words = self.entry.findAll('div',{'class':'Sense'})
         while len(words) > 1 and choice != 0:
             rangeWords = range(1,len(words)+1)
             if choice is None:
                 for i in rangeWords:
                     print i, words[i-1].text
-                choice = int(raw_input("Select sense(s)(separeate ','): "))
+                choice = raw_input("Select sense(s)(separeate ','): ")
             try:
-                choice = choice.split(',')
+                choice = [int(i) for i in choice.split(',')]
             except:
-                pass
-            print choice
-            choice = [i for i in rangeWords if i in rangeWords]
-            print choice
+                choice = [int(choice)]
+            choice = [i for i in choice if i in rangeWords]
             if choice: 
                 for i in choice:
-                    soup.findAll('div', {'class':'Sense'})[i-1]['id'] = 'markedSense' 
+                    self.entry.findAll('div', {'class':'Sense'})[i-1]['id'] = 'markedSense' 
                 [i.extract() for i in words if i['id'] != 'markedSense']
                 break
             else: choice = None
-
-        self.entry_senses = [BeautifulSoup(str(i)) for i in soup.findAll('div', {'class':'Sense'})]
-        print self.entry_senses
+        self.entry_senses = [BeautifulSoup(str(i)) for i in self.entry.findAll('div', {'class':'Sense'})]
 
 
 
