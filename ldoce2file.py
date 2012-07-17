@@ -50,7 +50,7 @@ class Ldoce(object):
 
     def senses(self):
         return [
-                { 'DEF': self._to_text(i.findAll('',{'class':'DEF'}))[0],
+                { 'DEFS': self._to_text(i.findAll('',{'class':'DEF'})),
                   'EXAMPLE': self._to_text(i.findAll('',{'class':'EXAMPLE'}))}
                 for i in self.entry_senses
                 ]
