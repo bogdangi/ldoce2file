@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # http://www.ldoceonline.com/search/?q=bore
+# -*- coding: utf-8 -*-
 
 import urllib
 import urllib2
@@ -139,7 +140,7 @@ if __name__ == '__main__':
                 defenition = options.defenition,
                 )
         ldoce.showDescription()
-        print ldoce.rendered
+        print ldoce.rendered.encode('utf-8')
 
     if options.words is not None:
         ldoces = []
