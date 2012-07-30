@@ -1,5 +1,5 @@
 " <h1>{{ head.word }}{% if head.homographsSelected %} <sup>{{ head.homographsSelected }}</sup> {% endif %}{% if head.POS %} <i>{{ head.POS }}</i>{% endif %}</h1>","{% for sense in senses %}
 {% for def in sense.DEFS %}{{ def }}:
-{% endfor %}{% for eg in  sense.EXAMPLE %}{% if eg %} - <i>{{ eg }}</i>
+{% endfor %}{% for eg in  sense.EXAMPLE %}{% if eg %}<br /> - <i>{{ eg }}</i>
 {% endif %}{% endfor %}
 {% endfor %}","tag"
